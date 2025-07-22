@@ -1,7 +1,19 @@
-import React from "react";
+import { useEffect } from "react";
+import useStore from "../store/store";
+import { Link } from "react-router-dom";
 
 const Home = () => {
-  return <div>Home</div>;
+  const { isAuthenticated, user } = useStore();
+  useEffect(() => {
+    console.log(isAuthenticated);
+    console.log(user);
+  }, [isAuthenticated, user]);
+
+  return (
+    <div>
+      <Link to="/">Login</Link>
+    </div>
+  );
 };
 
 export default Home;

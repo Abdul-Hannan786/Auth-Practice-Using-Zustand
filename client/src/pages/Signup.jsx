@@ -1,16 +1,31 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useStore from "../store/store";
 
 const Signup = () => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser, setIsAuthenticated } = useStore();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Full name:", fullname);
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try {
+      const { data } = await axios.post("http://localhost:3000/register", {
+        email,
+        password,
+        fullname,
+      });
+      console.log(data);
+      if (data.success) {
+        console.log(data.user);
+        setUser(data.user);
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
     // Add your login logic here
   };
 
@@ -67,7 +82,7 @@ const Signup = () => {
             type="submit"
             className="w-full cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
           >
-            Login
+            Signup
           </button>
         </form>
       </div>

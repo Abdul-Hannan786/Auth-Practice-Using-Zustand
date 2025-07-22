@@ -1,15 +1,35 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useStore from "../store/store";
 
 const Login = () => {
+  const { setUser, setIsAuthenticated } = useStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
-    // Add your login logic here
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+      console.log(data);
+      if (data.success) {
+        console.log(data.message);
+        setUser(data.user);
+        setIsAuthenticated(true);
+      } else {
+        console.log(data.message);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
